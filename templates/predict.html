@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Predict Traffic Anomaly</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .background-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-image: url('{{ url_for("static", filename="WB1.jpg") }}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 0;
+    }
+
+    .background-wrapper::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); /* darker overlay */
+      z-index: 1;
+    }
+
+    .center-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 100%;
+      max-width: 700px;
+      padding: 20px;
+    }
+
+    .container {
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      text-align: center;
+      backdrop-filter: blur(1px);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+      color: white;
+    }
+
+    h2 {
+      color: #ffffff;
+      font-size: 2rem;
+      margin-bottom: 30px;
+    }
+
+    input[type="file"] {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+      width: 80%;
+      margin: 15px 0;
+    }
+
+    button {
+      background-color: #0a58ca;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #0d6efd;
+    }
+
+    .back-link {
+      margin-top: 30px;
+      display: block;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    #videoPreview {
+      display: none;
+      margin: 20px auto;
+      width: 100%;
+      max-width: 600px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    }
+
+    #loadingSpinner {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #0a58ca;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background-wrapper"></div>
+
+  <div class="center-wrapper">
+    <div class="container">
+      <h2>Upload Video for Traffic Anomaly Prediction</h2>
+
+      <form method="POST" action="{{ url_for('predict') }}" enctype="multipart/form-data" onsubmit="showLoading()">
+        <input type="file" name="video" id="videoInput" accept="video/*" required>
+        <br>
+
+        <video id="videoPreview" autoplay loop muted></video>
+        <br>
+
+        <button type="submit" id="submitBtn">Predict</button>
+      </form>
+
+      <div id="loadingSpinner">
+        <div class="spinner"></div>
+        <p>Processing video...</p>
+      </div>
+
+      <a href="{{ url_for('home') }}" class="back-link">← Go Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('videoInput');
+    const preview = document.getElementById('videoPreview');
+
+    input.addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        preview.src = url;
+        preview.style.display = 'block';
+      } else {
+        preview.src = '';
+        preview.style.display = 'none';
+      }
+    });
+
+    function showLoading() {
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = "Predicting...";
+      document.getElementById('videoInput').style.display = 'none';
+      document.getElementById('loadingSpinner').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

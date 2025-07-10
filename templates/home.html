@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Traffic Congestion Detection & Prediction</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .background-wrapper {
+      background-image: url('{{ url_for("static", filename="WB1.jpg") }}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .background-wrapper::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6); /* Transparency level */
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    header, section {
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    h1, h2, h3, h4 {
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    p,
+    .feature-card p,
+    .benefit-card p,
+    .stat-item p,
+    .step-card p {
+      color: #f1f1f1;
+      font-size: 1.05rem;
+    }
+
+    .hero-section {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .hero-text {
+      flex: 1 1 500px;
+    }
+
+    .hero-image img {
+      max-width: 100%;
+      height:275px;
+      border-radius: 12px;
+    }
+
+    .highlight {
+      color: #64b5f6;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      font-weight: 600;
+      background: #ffffff;
+      color: #2a5bd7;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      margin-top: 20px;
+    }
+
+    .btn-secondary {
+      background:#ffffff;
+      color:rgb(228, 33, 33);
+      border: 2px solidrgb(0, 4, 12);
+    }
+
+    .feature-cards,
+    .steps-grid,
+    .stats-grid,
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .feature-card,
+    .step-card,
+    .stat-item,
+    .benefit-card {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      backdrop-filter: blur(2px);
+    }
+
+    .icon,
+    .step-number {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .cta-section {
+      text-align: center;
+      background: rgba(255, 255, 255, 0);
+      height:250px;
+      width:1000px;
+      
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      background: rgba(255, 255, 255, 0);
+      color: #333;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background-wrapper">
+    <div class="content">
+
+      <!-- HERO SECTION -->
+      <section class="hero-section">
+        <div class="hero-text">
+          <h1><span class="highlight">AI-Powered Traffic Congestion</span> Detection & Prediction</h1>
+          <p>Analyze traffic congestion in real-time. Our system uses AI and computer vision to detect vehicles,
+            compute congestion levels, and flag unusual traffic patterns—empowering cities to make roads safer.</p>
+          <a href="{{ url_for('predict') }}" class="btn">Start Prediction</a>
+        </div>
+        <div class="hero-image">
+          <img src="{{ url_for('static', filename='WB15.jpg') }}" alt="Traffic AI" loading="lazy" />
+        </div>
+      </section>
+
+      <!-- ABOUT SECTION -->
+      <section>
+        <h2>What We Do</h2>
+        <p>We use computer vision and machine learning to analyze CCTV traffic footage. YOLOv8 segmentation detects vehicles,
+          calculates the occupancy ratio (vehicle pixels vs road pixels), and classifies traffic into congestion levels: Low,
+          Moderate, High, and Unusual. Aggregated features are passed to a Random Forest model to produce video-level predictions.
+        </p>
+        <div class="feature-cards">
+          <div class="feature-card">
+            <span class="icon">🧠</span>
+            <h3>YOLOv8 Segmentation</h3>
+            <p>Detects and segments vehicles (cars, buses, trucks, motorcycles) from each video frame.</p>
+          </div>
+          <div class="feature-card">
+            <span class="icon">📏</span>
+            <h3>Occupancy Ratio</h3>
+            <p>Calculates vehicle-to-road pixel ratio to assess traffic density at each frame.</p>
+          </div>
+          <div class="feature-card">
+            <span class="icon">🧮</span>
+            <h3>ML-Based Classification</h3>
+            <p>Applies a trained model to categorize videos into congestion levels, including Unusual Congestion.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section>
+        <h2>How It Works</h2>
+        <div class="steps-grid">
+          <div class="step-card">
+            <span class="step-number">1</span>
+            <h4>Upload Video</h4>
+            <p>Submit traffic footage from CCTV, drones, or dashcams.</p>
+          </div>
+          <div class="step-card">
+            <span class="step-number">2</span>
+            <h4>Vehicle Detection</h4>
+            <p>YOLOv8 segments vehicles and computes occupancy ratios for each frame.</p>
+          </div>
+          <div class="step-card">
+            <span class="step-number">3</span>
+            <h4>Congestion Prediction</h4>
+            <p>Our ML model classifies overall traffic level for each video segment.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATISTICS -->
+      <section>
+        <h2>India’s Road Reality</h2>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <h3>🚑 450,000+</h3>
+            <p>Annual Road Accidents</p>
+          </div>
+          <div class="stat-item">
+            <h3>💀 155,000+</h3>
+            <p>Fatalities (2023)</p>
+          </div>
+          <div class="stat-item">
+            <h3>🕒 30–60 min/day</h3>
+            <p>Average Urban Traffic Delay</p>
+          </div>
+          <div class="stat-item">
+            <h3>📍 120+</h3>
+            <p>Congested Cities</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- BENEFITS -->
+      <section>
+        <h2>Who Is It For?</h2>
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <span class="icon">🏛</span>
+            <h4>Urban Planners</h4>
+            <p>Build smart infrastructure and traffic flow systems with real data.</p>
+          </div>
+          <div class="benefit-card">
+            <span class="icon">🚓</span>
+            <h4>Law Enforcement</h4>
+            <p>Deploy patrols and cameras efficiently at high-risk spots.</p>
+          </div>
+          <div class="benefit-card">
+            <span class="icon">🚑</span>
+            <h4>Emergency Responders</h4>
+            <p>Respond faster with real-time alerts and heatmaps.</p>
+          </div>
+          <div class="benefit-card">
+            <span class="icon">👨‍👩‍👧‍👦</span>
+            <h4>Civilians</h4>
+            <p>Safer roads, less congestion, and a better commute experience.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA SECTION -->
+      <section class="cta-section">
+        <h2>Start Your AI Traffic Congestion Analysis</h2>
+        <p>Upload your video, detect risks, and classify traffic patterns instantly using our AI-powered system.</p>
+        <a href="{{ url_for('predict') }}" class="btn btn-secondary">Upload & Analyze</a>
+      </section>
+
+      <!-- FOOTER -->
+      <footer>
+        <p>&copy; 2025 Road Accident Prediction AI. All rights reserved.</p>
+      </footer>
+
+    </div> <!-- End content -->
+  </div> <!-- End background-wrapper -->
+</body>
+</html>
