@@ -24,9 +24,11 @@ This project leverages Computer Vision and Deep Learning to automatically detect
 ##  Demo
 
 *Upload a traffic video to instantly detect congestion levels and identify possible accidents using our AI-powered system.*
+
 ![WhatsApp Image 2025-07-11 at 02 33 06_a876306b](https://github.com/user-attachments/assets/dbf3c3b1-2a26-4906-81b8-82fddedd96cb)
 
 *Predicted congestion level and accident status based on real-time AI analysis of the uploaded traffic footage.*
+
 ![WhatsApp Image 2025-07-11 at 02 34 57_7f9ac8ed](https://github.com/user-attachments/assets/092bb107-b337-435a-8766-baaa4a6d0970)
 
 ## Model Summary
